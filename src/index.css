@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+:root {
+  --accent: #ea621d;
+  --accent-muted: #fdd698;
+  --canvas: #f4f4f5;
+  --ink: #0a0a0a;
+  --ink-muted: #52525b;
+}
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-canvas: var(--canvas);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
