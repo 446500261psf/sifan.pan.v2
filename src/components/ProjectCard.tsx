@@ -13,7 +13,7 @@ export function ProjectCard({ project }: Props) {
   return (
     <Tag
       {...linkProps}
-      className="group flex flex-col rounded-2xl border border-black/6 bg-white p-6 shadow-sm transition-shadow hover:shadow-md sm:p-8"
+      className="open-card group flex flex-col p-6 transition-shadow duration-[var(--open-duration)] hover:shadow-md sm:p-8"
     >
       <div className="flex items-baseline justify-between gap-4">
         <span className="text-sm font-medium tabular-nums text-accent">{project.index}</span>
@@ -29,7 +29,7 @@ export function ProjectCard({ project }: Props) {
         {project.tags.map((tag) => (
           <li
             key={tag}
-            className="rounded-full bg-canvas px-3 py-1 text-xs font-medium text-ink-muted"
+            className="rounded-full bg-surface px-3 py-1 text-xs font-medium text-ink-muted"
           >
             {tag}
           </li>

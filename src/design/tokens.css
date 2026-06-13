@@ -1,0 +1,34 @@
+/**
+ * Open-inspired tokens — dark cinematic variant for sifan.pan.v2
+ */
+:root {
+  /* Canvas — near-black with warm undertone */
+  --open-canvas: #0a0908;
+  --open-surface: rgba(255, 255, 255, 0.04);
+  --open-surface-elevated: rgba(255, 255, 255, 0.06);
+
+  --open-ink: #f4f0ea;
+  --open-ink-muted: #a8a096;
+  --open-ink-subtle: #6f6a63;
+
+  --open-sunset-from: #e8b48a;
+  --open-sunset-mid: #d4846a;
+  --open-sunset-to: #b85c4a;
+  --open-twilight-from: #8b9fd4;
+  --open-twilight-to: #5c6b8a;
+  --open-night: #0a0908;
+
+  --open-border: rgba(255, 255, 255, 0.08);
+  --open-guide-line: rgba(255, 255, 255, 0.1);
+
+  --open-radius-sm: 12px;
+  --open-radius-md: 20px;
+  --open-radius-lg: 28px;
+
+  --open-font-sans: 'Instrument Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --open-font-display: 'Instrument Sans', 'Helvetica Neue', system-ui, sans-serif;
+
+  --open-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --open-duration: 480ms;
+
+}
