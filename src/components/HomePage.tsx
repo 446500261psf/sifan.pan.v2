@@ -63,7 +63,6 @@ export function HomePage({
                 </section>
               )}
               {activeTab === 'playground' && <PlaygroundSection cardLayout />}
-              {activeTab === 'me' && <AboutSection cardLayout />}
             </div>
             <Footer
               minimal

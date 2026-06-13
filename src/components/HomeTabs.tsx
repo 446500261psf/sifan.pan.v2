@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import type { CSSProperties } from 'react'
 
-export type HomeTab = 'work' | 'playground' | 'me'
+export type HomeTab = 'work' | 'playground'
 
-const tabs: { id: HomeTab; label: string; icon: 'folder' | 'grid' | 'user' }[] = [
+const tabs: { id: HomeTab; label: string; icon: 'folder' | 'grid' }[] = [
   { id: 'work', label: 'Work', icon: 'folder' },
   { id: 'playground', label: 'Playground', icon: 'grid' },
-  { id: 'me', label: 'Me', icon: 'user' },
 ]
 
 function TabIcon({ name }: { name: (typeof tabs)[number]['icon'] }) {
@@ -36,17 +35,7 @@ function TabIcon({ name }: { name: (typeof tabs)[number]['icon'] }) {
     )
   }
 
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
-      <circle cx="9" cy="6" r="2.75" stroke={stroke} strokeWidth="1.35" />
-      <path
-        d="M4.25 14.75c0-2.62 2.13-4.75 4.75-4.75s4.75 2.13 4.75 4.75"
-        stroke={stroke}
-        strokeWidth="1.35"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
+  return null
 }
 
 /** 外侧边缘高光 + 内侧暗角 vignette(鼠标侧微亮) */
