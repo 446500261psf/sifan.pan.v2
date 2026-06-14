@@ -1,6 +1,6 @@
 Lifecycle & Marketing Campaigns — 活动长图
 
-当前 10 张长图：
+当前 10 张长图，展示 01–05、07–10（06 华沙半马已下线）：
 
   01.png … 10.png
 

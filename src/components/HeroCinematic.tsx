@@ -38,7 +38,7 @@ export function HeroCinematic() {
         </p>
 
         <p
-          className="hero-line mx-auto mt-8 max-w-md text-sm leading-relaxed text-ink-muted sm:text-base"
+          className="hero-line open-desc mx-auto mt-8 max-w-md text-sm leading-relaxed text-ink sm:text-base"
           style={{ animationDelay: `${subtitleDelay}s` }}
         >
           Enter a space for growth, conversion, and clarity — through design.

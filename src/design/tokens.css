@@ -27,8 +27,25 @@
 
   --open-font-sans: 'Instrument Sans', 'Helvetica Neue', system-ui, sans-serif;
   --open-font-display: 'Instrument Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --open-font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --open-font-work-title: var(--open-font-mono);
+  --open-font-desc: var(--open-font-mono);
 
   --open-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --open-duration: 480ms;
 
+  /* Sleep Pop-up hero — 01 Video.mov（约为放大版的一半） */
+  --exposure-hero-media-width: min(92vw, 8.5rem);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --exposure-hero-media-width: 15.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --exposure-hero-media-width: 18rem;
+  }
 }

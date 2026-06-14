@@ -17,7 +17,7 @@ export function SectionHeading({ eyebrow, title, subtitle }: Props) {
         {title}
       </h2>
       {subtitle ? (
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">
+        <p className="mt-4 max-w-2xl font-desc text-base leading-relaxed text-ink sm:text-lg">
           {subtitle}
         </p>
       ) : null}

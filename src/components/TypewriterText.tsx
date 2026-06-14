@@ -1,8 +1,9 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 
-const CHAR_MS = 96
-const SPACE_MS = 72
-const PAUSE_BETWEEN_LINES_MS = 760
+const CHAR_MS = 68
+const SPACE_MS = 46
+const PAUSE_BETWEEN_LINES_MS = 520
+const PUNCT_PAUSE_MS = 140
 
 export type TypewriterSegment = {
   text: string
@@ -53,43 +54,39 @@ function renderKeepText(keep: string, keepText: string, pullKeep: boolean) {
   )
 }
 
-function renderLineContent(
+function renderKeepLine(
   line: string,
-  lineIndex: number,
-  keepText: string | undefined,
-  keepPrefix: string | undefined,
+  keepText: string,
+  keepPrefix: string,
   pullKeep: boolean,
+  showCursor: boolean,
 ) {
-  if (!keepText) {
-    return <span className="typewriter-text">{line}</span>
-  }
+  const before = line.slice(0, Math.min(line.length, keepPrefix.length))
+  const rest = line.slice(keepPrefix.length)
+  const keep = rest.slice(0, Math.min(rest.length, keepText.length))
+  const after = rest.slice(keepText.length)
+  const stillOnPrefix = keep.length === 0
 
-  if (lineIndex === 0 && keepPrefix) {
-    const before = line.slice(0, Math.min(line.length, keepPrefix.length))
-    const rest = line.slice(keepPrefix.length)
-    const keep = rest.slice(0, Math.min(rest.length, keepText.length))
-    const after = rest.slice(keepText.length)
-
-    return (
-      <span className="typewriter-keep-wrap">
-        {before ? (
-          <span className="typewriter-fade-out typewriter-fade-prefix">{before}</span>
-        ) : null}
-        {renderKeepText(keep, keepText, pullKeep)}
-        {after ? <span className="typewriter-fade-out">{after}</span> : null}
+  return (
+    <span className="typewriter-keep-wrap">
+      <span className="typewriter-prefix-slot">
+        <span className="typewriter-prefix-rail">{keepPrefix}</span>
+        <span className="typewriter-prefix-live">
+          {before ? <span className="typewriter-fade-out typewriter-fade-prefix">{before}</span> : null}
+          {showCursor && stillOnPrefix ? <span className="typewriter-cursor" aria-hidden /> : null}
+        </span>
       </span>
-    )
-  }
-
-  if (lineIndex > 0) {
-    return <span className="typewriter-fade-out">{line}</span>
-  }
-
-  return <span className="typewriter-text">{line}</span>
+      {renderKeepText(keep, keepText, pullKeep)}
+      {after ? <span className="typewriter-fade-out">{after}</span> : null}
+      {showCursor && !stillOnPrefix ? <span className="typewriter-cursor" aria-hidden /> : null}
+    </span>
+  )
 }
 
 function charDelay(ch: string): number {
   if (ch === ' ') return SPACE_MS
+  if (',:;'.includes(ch)) return CHAR_MS + PUNCT_PAUSE_MS * 0.55
+  if ('.!?'.includes(ch)) return CHAR_MS + PUNCT_PAUSE_MS
   return CHAR_MS
 }
 
@@ -142,7 +139,6 @@ export function TypewriterText({
   pullKeep = false,
 }: Props) {
   const [rows, setRows] = useState<string[]>([''])
-  const [showCursor, setShowCursor] = useState(true)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -185,31 +181,32 @@ export function TypewriterText({
     return () => window.clearTimeout(timeoutId)
   }, [segments, onComplete])
 
-  useEffect(() => {
-    const id = window.setInterval(() => setShowCursor((v) => !v), 530)
-    return () => window.clearInterval(id)
-  }, [])
-
   const lastRowIndex = rows.length - 1
 
   return (
     <div className={`typewriter-block ${className}`.trim()}>
-      {rows.map((line, i) => (
-        <p
-          key={i}
-          className={`typewriter-line${keepText && i === 0 ? ' typewriter-line-keep' : ''}`}
-        >
-          {renderLineContent(line, i, keepText, keepPrefix, pullKeep)}
-          {i === lastRowIndex && !hideCursor && (
-            <span
-              className={`typewriter-cursor${showCursor ? ' typewriter-cursor-visible' : ''}`}
-              aria-hidden
-            >
-              |
+      {rows.map((line, i) => {
+        const showCursor = i === lastRowIndex && !hideCursor
+        const isKeepLine = Boolean(keepText && keepPrefix && i === 0)
+
+        return (
+          <p
+            key={i}
+            className={`typewriter-line${isKeepLine ? ' typewriter-line-keep' : ''}`}
+          >
+            <span className="typewriter-line-inner">
+              {isKeepLine ? (
+                renderKeepLine(line, keepText!, keepPrefix!, pullKeep, showCursor)
+              ) : keepText && i > 0 ? (
+                <span className="typewriter-fade-out">{line}</span>
+              ) : (
+                <span className="typewriter-text">{line}</span>
+              )}
+              {showCursor && !isKeepLine ? <span className="typewriter-cursor" aria-hidden /> : null}
             </span>
-          )}
-        </p>
-      ))}
+          </p>
+        )
+      })}
     </div>
   )
 }

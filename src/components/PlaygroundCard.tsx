@@ -1,5 +1,6 @@
 import { useMemo, useState, type CSSProperties } from 'react'
 import type { PlaygroundItem } from '../data/playground'
+import { ClaimMedalDemo } from './playground/ClaimMedalDemo'
 
 type Props = {
   item: PlaygroundItem
@@ -12,18 +13,45 @@ function columnSpan(aspectRatio: number): number {
   return 4
 }
 
+const DEMO_SPAN: Partial<Record<string, number>> = {
+  'claim-medal': 4,
+}
+
 export function PlaygroundCard({ item }: Props) {
   const [aspectRatio, setAspectRatio] = useState<number | null>(null)
 
   const style = useMemo((): CSSProperties | undefined => {
+    if (item.demo === 'claim-medal') {
+      return {
+        gridColumn: `span ${DEMO_SPAN[item.id] ?? 4}`,
+        aspectRatio: '1 / 1',
+        maxWidth: '12rem',
+      }
+    }
     if (!aspectRatio) return undefined
     return {
       gridColumn: `span ${columnSpan(aspectRatio)}`,
       aspectRatio: String(aspectRatio),
     }
-  }, [aspectRatio])
+  }, [aspectRatio, item.demo, item.id])
 
-  const cover = item.cover.startsWith('/') ? item.cover : `/${item.cover}`
+  if (item.demo === 'claim-medal') {
+    return (
+      <article
+        className="pg-bento pg-bento--demo"
+        data-pg={item.id}
+        style={style}
+        aria-label={item.title}
+      >
+        <ClaimMedalDemo />
+        <span className="pg-bento-label" aria-hidden="true">
+          {item.title}
+        </span>
+      </article>
+    )
+  }
+
+  const cover = item.cover!.startsWith('/') ? item.cover : `/${item.cover}`
 
   const tile = (
     <article

@@ -23,6 +23,7 @@ function pageUrlFromAlt(alt: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
+    .replace(/-\d+$/, '')
   return `health.huawei.com/campaigns/${slug || 'preview'}`
 }
 

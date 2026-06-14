@@ -44,7 +44,7 @@ export function AboutSection({ cardLayout = false }: Props) {
               subtitle="我是 Sifan Pan，产品设计师，关注增长、转化与复杂功能的教育化表达。"
             />
           )}
-          <p className={`text-base leading-relaxed text-ink-muted${cardLayout ? '' : ' mt-6'}`}>
+          <p className={`open-desc text-base leading-relaxed text-ink${cardLayout ? '' : ' mt-6'}`}>
             我擅长把商业目标、用户行为和产品能力放进同一条叙事里：从活动与会员设计，到高曝光位与激励视觉，再到新功能的上手引导。
             这个站点 v2 把 <strong className="font-medium text-ink">AI Playground</strong>、
             <strong className="font-medium text-ink"> Works </strong>
@@ -52,7 +52,7 @@ export function AboutSection({ cardLayout = false }: Props) {
           </p>
           <ul className="mt-8 space-y-3">
             {highlights.map((line) => (
-              <li key={line} className="flex gap-3 text-sm leading-relaxed text-ink-muted">
+              <li key={line} className="open-desc flex gap-3 text-sm leading-relaxed text-ink">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
                 {line}
               </li>

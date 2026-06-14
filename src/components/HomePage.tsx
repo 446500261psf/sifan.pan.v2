@@ -55,10 +55,19 @@ export function HomePage({
               {activeTab === 'work' && (
                 <section id="works" className="open-home-line work-showcases scroll-mt-24" aria-label="Works">
                   <div className="work-showcases-rail">
-                    <WorkProfileHeader profile={workProfile} />
-                    {workProjects.map((project) => (
-                      <WorkShowcase key={project.id} project={project} />
-                    ))}
+                    <div className="work-showcases-guide">
+                      <div className="work-showcases-guide-inner">
+                        <WorkProfileHeader profile={workProfile} />
+                        {workProjects[0] ? (
+                          <WorkShowcase key={workProjects[0].id} project={workProjects[0]} />
+                        ) : null}
+                      </div>
+                    </div>
+                    <div className="work-showcases-rest">
+                      {workProjects.slice(1).map((project) => (
+                        <WorkShowcase key={project.id} project={project} />
+                      ))}
+                    </div>
                   </div>
                 </section>
               )}

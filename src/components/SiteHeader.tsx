@@ -36,7 +36,7 @@ export function SiteHeader({
     >
       <div
         className={`relative mx-auto flex h-14 max-w-5xl items-center px-5 sm:px-8${
-          centered ? ' justify-center' : ' justify-between'
+          centered ? ' site-header-inner--centered justify-center' : ' justify-between'
         }`}
       >
         <a href="#" className={`site-header-brand ${brandBase}`.trim()}>
