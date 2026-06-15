@@ -341,7 +341,7 @@ export const workProjects: WorkProject[] = [
           kind: 'video',
           file: 'portfolio/project-2/01-video.mp4',
           alt: 'Sleep Music Blind Box campaign',
-          rev: '2025061501',
+          rev: '2025061503',
         },
         backgroundLight: {
           file: 'portfolio/project-2/bg light.png',
@@ -390,7 +390,7 @@ export const workProjects: WorkProject[] = [
     mockupLayout: 'hand-phone',
     description:
       'Built a membership landing page from the ground up, curating exclusive resources and premium features through modular content design to enhance membership value perception and engagement.',
-    screens: handPhoneScreens('2025061502'),
+    screens: handPhoneScreens('2025061503'),
   },
   {
     id: 'lifecycle-marketing',

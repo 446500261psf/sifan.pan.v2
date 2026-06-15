@@ -44,16 +44,14 @@ export function HandPhoneMockup({ src, alt, rev, scroll }: Props) {
 
   useEffect(() => {
     const video = videoRef.current
-    if (!video || !url || scroll || !isVideo) return
+    if (!video || scroll || !isVideo) return
 
-    setMissing(false)
-    video.load()
     const play = () => {
       void video.play().catch(() => {})
     }
-    play()
-    video.addEventListener('loadeddata', play)
-    return () => video.removeEventListener('loadeddata', play)
+    video.addEventListener('canplay', play)
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) play()
+    return () => video.removeEventListener('canplay', play)
   }, [url, scroll, isVideo])
 
   return (
