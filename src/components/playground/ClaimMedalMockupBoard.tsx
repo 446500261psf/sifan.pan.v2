@@ -33,7 +33,7 @@ export function ClaimMedalMockupBoard() {
               draggable={false}
               aria-hidden="true"
             />
-            <MedalReliefCanvas ref={reliefRef} variant="flow" phase="wipe-medal" />
+            <MedalReliefCanvas ref={reliefRef} variant="flow" phase="wipe-medal" trackUnlock={false} />
           </>
         }
       />
