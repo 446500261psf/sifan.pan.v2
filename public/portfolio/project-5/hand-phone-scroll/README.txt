@@ -3,8 +3,10 @@ Hand Phone Scroll — 活动长图 / 录屏
 当前文件：
 
   phone mockup for scroll.png  手拿手机 mockup 叠层（1736×2927，屏幕已透明）
-  New VIP Page.mov        VIP 页面录屏
-  new device page.mov     Device 页面录屏
+  New VIP Page.mov        VIP 页面录屏（源文件，现网用 new-vip-page.mp4）
+  new device page.mov     Device 页面录屏（源文件，现网用 new-device-page.mp4）
+  new-vip-page.mp4        现网部署 — VIP 页面录屏
+  new-device-page.mp4     现网部署 — Device 页面录屏
   01.png                       备用长图
   frame new.png                蒙版源（备用）
 

@@ -149,7 +149,7 @@ function campaignScrollScreens(rev: string): WorkScreen[] {
 function handPhoneScreens(rev: string): WorkScreen[] {
   return [
     {
-      file: 'portfolio/project-5/hand-phone-scroll/New VIP Page.mov',
+      file: 'portfolio/project-5/hand-phone-scroll/new-vip-page.mp4',
       kind: 'video',
       label: 'New VIP Page',
       alt: 'HUAWEI Health+ VIP membership page',
@@ -158,7 +158,7 @@ function handPhoneScreens(rev: string): WorkScreen[] {
       rev,
     },
     {
-      file: 'portfolio/project-5/hand-phone-scroll/new device page.mov',
+      file: 'portfolio/project-5/hand-phone-scroll/new-device-page.mp4',
       kind: 'video',
       label: 'New Device Page',
       alt: 'HUAWEI Health+ device page',
@@ -339,9 +339,9 @@ export const workProjects: WorkProject[] = [
           'Encourage healthy bedtime habits and increase engagement with sleep-tracking features. Achieved a 43% CTR through optimized messaging, timing, and visual hierarchy.',
         screen: {
           kind: 'video',
-          file: 'portfolio/project-2/01 Video.mov',
+          file: 'portfolio/project-2/01-video.mp4',
           alt: 'Sleep Music Blind Box campaign',
-          rev: '2025060701',
+          rev: '2025061501',
         },
         backgroundLight: {
           file: 'portfolio/project-2/bg light.png',
@@ -390,7 +390,7 @@ export const workProjects: WorkProject[] = [
     mockupLayout: 'hand-phone',
     description:
       'Built a membership landing page from the ground up, curating exclusive resources and premium features through modular content design to enhance membership value perception and engagement.',
-    screens: handPhoneScreens('2025061424'),
+    screens: handPhoneScreens('2025061501'),
   },
   {
     id: 'lifecycle-marketing',
