@@ -390,7 +390,7 @@ export const workProjects: WorkProject[] = [
     mockupLayout: 'hand-phone',
     description:
       'Built a membership landing page from the ground up, curating exclusive resources and premium features through modular content design to enhance membership value perception and engagement.',
-    screens: handPhoneScreens('2025061501'),
+    screens: handPhoneScreens('2025061502'),
   },
   {
     id: 'lifecycle-marketing',

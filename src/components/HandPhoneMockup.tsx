@@ -19,6 +19,7 @@ export function HandPhoneMockup({ src, alt, rev, scroll }: Props) {
   const [missing, setMissing] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   const updateScrollProgress = useCallback(() => {
     const el = scrollRef.current
@@ -27,12 +28,6 @@ export function HandPhoneMockup({ src, alt, rev, scroll }: Props) {
     setScrollProgress(max > 0 ? el.scrollTop / max : 0)
   }, [])
 
-  useEffect(() => {
-    setMissing(false)
-    setScrollProgress(0)
-    scrollRef.current?.scrollTo({ top: 0 })
-  }, [src, rev])
-
   const url = src
     ? rev
       ? `${publicUrl(src)}?v=${encodeURIComponent(rev)}`
@@ -40,6 +35,26 @@ export function HandPhoneMockup({ src, alt, rev, scroll }: Props) {
     : undefined
   const isVideo = src ? isVideoSrc(src) : false
   const overlaySrc = `${publicUrl(MOCKUP_OVERLAY)}?v=${MOCKUP_REV}`
+
+  useEffect(() => {
+    setMissing(false)
+    setScrollProgress(0)
+    scrollRef.current?.scrollTo({ top: 0 })
+  }, [src, rev])
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || !url || scroll || !isVideo) return
+
+    setMissing(false)
+    video.load()
+    const play = () => {
+      void video.play().catch(() => {})
+    }
+    play()
+    video.addEventListener('loadeddata', play)
+    return () => video.removeEventListener('loadeddata', play)
+  }, [url, scroll, isVideo])
 
   return (
     <div className="hand-phone-mockup">
@@ -76,12 +91,15 @@ export function HandPhoneMockup({ src, alt, rev, scroll }: Props) {
             </>
           ) : isVideo ? (
             <video
+              ref={videoRef}
+              key={url}
               className="hand-phone-mockup-media"
               src={url}
               autoPlay
               loop
               muted
               playsInline
+              preload="auto"
               aria-label={alt}
               onError={() => setMissing(true)}
             />
