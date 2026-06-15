@@ -21,6 +21,8 @@ type MedalScale = { ratio: number; maxPx: number }
 type MedalReliefCanvasProps = {
   variant?: MedalReliefVariant
   phase?: MedalReliefPhase
+  /** 是否检测擦除进度并触发 onMedalReady；mockup 演示屏应关闭以循环擦除→消退 */
+  trackUnlock?: boolean
   medalScale?: MedalScale
   onMedalReady?: () => void
   onBackgroundReady?: () => void
@@ -44,6 +46,8 @@ const MEDAL_UNLOCK_COVERAGE = 0.88
 const BG_UNLOCK_AVG = 0.54
 const BG_UNLOCK_COVERAGE = 0.38
 const TAP_MOVE_PX = 14
+/** flow 演示：停笔后更快回到灰浮雕 */
+const FLOW_MEDAL_DECAY_RGB = 205
 
 type MedalRect = { left: number; top: number; w: number; h: number }
 
@@ -94,10 +98,10 @@ function snapRevealCanvas(canvas: HTMLCanvasElement) {
   if (snapped) rctx.putImageData(img, 0, 0)
 }
 
-function decayRevealCanvas(canvas: HTMLCanvasElement) {
+function decayRevealCanvas(canvas: HTMLCanvasElement, decayRgb: number = RELIEF_V1_DECAY_RGB) {
   const rctx = canvas.getContext('2d', { willReadFrequently: true })!
   rctx.globalCompositeOperation = 'multiply'
-  rctx.fillStyle = `rgb(${RELIEF_V1_DECAY_RGB}, ${RELIEF_V1_DECAY_RGB}, ${RELIEF_V1_DECAY_RGB})`
+  rctx.fillStyle = `rgb(${decayRgb}, ${decayRgb}, ${decayRgb})`
   rctx.fillRect(0, 0, canvas.width, canvas.height)
   rctx.globalCompositeOperation = 'source-over'
   snapRevealCanvas(canvas)
@@ -242,6 +246,7 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
   {
     variant = 'flow',
     phase = 'wipe-medal',
+    trackUnlock = true,
     medalScale,
     onMedalReady,
     onBackgroundReady,
@@ -257,6 +262,7 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
   const bgUnlockedRef = useRef(false)
   const phaseRef = useRef(phase)
   const variantRef = useRef(variant)
+  const trackUnlockRef = useRef(trackUnlock)
   const medalScaleRef = useRef(medalScale ?? (variant === 'bento' ? BENTO_MEDAL_SCALE : FLOW_MEDAL_SCALE))
   const onMedalReadyRef = useRef(onMedalReady)
   const onBackgroundReadyRef = useRef(onBackgroundReady)
@@ -274,6 +280,7 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
 
   phaseRef.current = phase
   variantRef.current = variant
+  trackUnlockRef.current = trackUnlock
   medalScaleRef.current = medalScale ?? (variant === 'bento' ? BENTO_MEDAL_SCALE : FLOW_MEDAL_SCALE)
   onMedalReadyRef.current = onMedalReady
   onBackgroundReadyRef.current = onBackgroundReady
@@ -471,7 +478,7 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
           stampAt(textures.revealCanvas, mx, my, 1, () => {
             medalRevealDirty = true
           })
-          if (variantRef.current === 'flow') updateMedalUnlock()
+          if (variantRef.current === 'flow' && trackUnlockRef.current) updateMedalUnlock()
           return
         }
 
@@ -512,9 +519,11 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
         if (performance.now() - lastPaintRef.current < RELIEF_V1_DECAY_PAUSE_MS) return
         const currentPhase = variantRef.current === 'bento' ? 'wipe-medal' : phaseRef.current
         if (currentPhase === 'wipe-medal') {
-          // flow 解锁后保留全彩；解锁前停笔自动恢复灰浮雕 underlay
-          if (variantRef.current === 'flow' && medalUnlockedRef.current) return
-          decayRevealCanvas(textures.revealCanvas)
+          const flowDecay = variantRef.current === 'flow'
+          decayRevealCanvas(textures.revealCanvas, flowDecay ? FLOW_MEDAL_DECAY_RGB : RELIEF_V1_DECAY_RGB)
+          if (flowDecay) {
+            decayRevealCanvas(textures.revealCanvas, FLOW_MEDAL_DECAY_RGB)
+          }
           medalRevealDirty = true
         } else if (currentPhase === 'wipe-background') {
           decayRevealCanvas(textures.bgRevealCanvas)
@@ -566,6 +575,12 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
         )
       }
 
+      const isOverMedalShape = (clientX: number, clientY: number) => {
+        const uv = pointerToUv(clientX, clientY)
+        const { mx, my } = screenToMedalUv(uv.x, uv.y, medalRect)
+        return inMedalBox(mx, my) && isMedalAt(medalMask, texSize, mx, my)
+      }
+
       /** flow 第一屏：鼠标悬停滑过即可擦除，无需按住 */
       const isFlowHoverPaint = () =>
         variantRef.current === 'flow' && phaseRef.current !== 'unlocked'
@@ -577,7 +592,7 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
 
       const applyFlowHoverPaint = (clientX: number, clientY: number) => {
         if (!canPaint() || !isFlowHoverPaint() || isPointerDown) return
-        if (!isInsideWrap(clientX, clientY)) {
+        if (!isInsideWrap(clientX, clientY) || !isOverMedalShape(clientX, clientY)) {
           lastUvRef.current = null
           lastPaintRef.current = 0
           return
