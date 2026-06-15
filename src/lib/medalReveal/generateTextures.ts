@@ -1,3 +1,5 @@
+import { publicUrl } from '../../publicUrl'
+
 const SIZE = 512
 
 export type MedalTextures = {
@@ -11,11 +13,13 @@ export type MedalTextures = {
   backgroundAspect: number
 }
 
-const MEDAL_BASE_URL = '/playground/medal/base.png'
-const MEDAL_NORMAL_URL = '/playground/medal/normal.png'
-const MEDAL_HEIGHT_URL = '/playground/medal/height.png'
-const MEDAL_BACKGROUND_URL = '/playground/medal/background-cycling-wild-portrait.png'
-const MEDAL_BACKGROUND_FALLBACK_URL = '/playground/medal/background.png'
+export const MEDAL_BASE_PATH = 'playground/medal/base.png'
+/** Figma 652:28 — 与 relief-figma-652-5 同尺寸，flow 擦除揭示用 */
+export const MEDAL_FIGMA_COLOR_PATH = 'playground/medal/medal-color-figma-v2.png'
+const MEDAL_NORMAL_PATH = 'playground/medal/normal.png'
+const MEDAL_HEIGHT_PATH = 'playground/medal/height.png'
+const MEDAL_BACKGROUND_PATH = 'playground/medal/background-cycling-wild-portrait.png'
+const MEDAL_BACKGROUND_FALLBACK_PATH = 'playground/medal/background.png'
 
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -58,12 +62,14 @@ function imageCoverCanvas(img: HTMLImageElement, size: number) {
 }
 
 /** 优先加载 public/playground/medal/ 下的 PS 素材 */
-export async function loadMedalTextures(): Promise<MedalTextures> {
+export async function loadMedalTextures(basePath = MEDAL_BASE_PATH): Promise<MedalTextures> {
   const [baseImg, normalImg, heightImg, backgroundImg] = await Promise.all([
-    loadImage(MEDAL_BASE_URL),
-    loadImage(MEDAL_NORMAL_URL),
-    loadImage(MEDAL_HEIGHT_URL),
-    loadImage(MEDAL_BACKGROUND_URL).catch(() => loadImage(MEDAL_BACKGROUND_FALLBACK_URL)),
+    loadImage(publicUrl(basePath)),
+    loadImage(publicUrl(MEDAL_NORMAL_PATH)),
+    loadImage(publicUrl(MEDAL_HEIGHT_PATH)),
+    loadImage(publicUrl(MEDAL_BACKGROUND_PATH)).catch(() =>
+      loadImage(publicUrl(MEDAL_BACKGROUND_FALLBACK_PATH)),
+    ),
   ])
   const size = baseImg.width
   return {
@@ -289,10 +295,11 @@ export function createMedalTextures(): MedalTextures {
   }
 }
 
-export async function createMedalTexturesAsync(): Promise<MedalTextures> {
+export async function createMedalTexturesAsync(basePath = MEDAL_BASE_PATH): Promise<MedalTextures> {
   try {
-    return await loadMedalTextures()
-  } catch {
+    return await loadMedalTextures(basePath)
+  } catch (error) {
+    console.warn('[medal] texture load failed, using procedural fallback', error)
     return createMedalTextures()
   }
 }

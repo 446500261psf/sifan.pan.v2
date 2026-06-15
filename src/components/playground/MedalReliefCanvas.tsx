@@ -1,5 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, type MouseEvent as ReactMouseEvent } from 'react'
-import { createMedalTexturesAsync } from '../../lib/medalReveal/generateTextures'
+import {
+  createMedalTexturesAsync,
+  MEDAL_FIGMA_COLOR_PATH,
+} from '../../lib/medalReveal/generateTextures'
 import {
   RELIEF_V1_BRUSH_RADIUS,
   RELIEF_V1_BRUSH_SPECKLES,
@@ -312,7 +315,8 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
     let disposed = false
     let cleanup: (() => void) | undefined
 
-    void createMedalTexturesAsync().then((textures) => {
+    const basePath = variantRef.current === 'flow' ? MEDAL_FIGMA_COLOR_PATH : undefined
+    void createMedalTexturesAsync(basePath).then((textures) => {
       if (disposed) return
 
       const { mask: medalMask, size: texSize } = buildMedalMask(textures.baseCanvas)

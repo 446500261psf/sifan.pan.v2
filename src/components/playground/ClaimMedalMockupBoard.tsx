@@ -6,7 +6,7 @@ import { MedalReliefCanvas, type MedalReliefHandle } from './MedalReliefCanvas'
 /** Figma 652:5 — 灰浮雕（与 #f4f4f4 背景融合） */
 const RELIEF = '/playground/medal/relief-figma-652-5.png'
 /** Figma 652:28 — 彩色勋章（透明底圆形） */
-const MEDAL_COLOR = '/playground/medal/base.png'
+const MEDAL_COLOR = '/playground/medal/medal-color-figma-v2.png'
 const BG_PORTRAIT = '/playground/medal/background-cycling-wild-portrait.png'
 
 /** Figma 652:44 — 三屏并排：擦除 / 可点按钮 / 展示 */

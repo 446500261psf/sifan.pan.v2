@@ -120,6 +120,16 @@ void main() {
     return;
   }
 
+  float reveal = texture(uReveal, muv).r;
+  float revealMix = reveal > 0.055 ? smoothstep(0.10, 0.92, reveal) : 0.0;
+
+  // flow 第一屏：灰浮雕由 DOM underlay 承担，WebGL 只按擦除蒙版叠彩色勋章
+  if (uFlowUnderlay > 0.5) {
+    vec3 base = texture(uBase, muv).rgb;
+    outColor = vec4(base, alpha * revealMix);
+    return;
+  }
+
   // 高度场 → 柔和体积法线（渐变，非线稿）
   float spread = 3.0;
   float hL = texture(uHeight, muv - vec2(uTexel.x * spread, 0.0)).r;
@@ -143,8 +153,6 @@ void main() {
   vec3 relief = uBgColor * shade;
 
   vec3 base = texture(uBase, muv).rgb;
-  float reveal = texture(uReveal, muv).r;
-  float revealMix = reveal > 0.055 ? smoothstep(0.10, 0.92, reveal) : 0.0;
   vec3 color = mix(relief, base, revealMix);
 
   outColor = vec4(color, alpha * revealMix);
