@@ -509,11 +509,11 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
 
       const decayReveals = () => {
         if (reduced) return
-        // flow mockup 悬停擦除：痕迹保留，避免 80ms 消退导致“必须按住才有效”
-        if (variantRef.current === 'flow') return
         if (performance.now() - lastPaintRef.current < RELIEF_V1_DECAY_PAUSE_MS) return
         const currentPhase = variantRef.current === 'bento' ? 'wipe-medal' : phaseRef.current
         if (currentPhase === 'wipe-medal') {
+          // flow 解锁后保留全彩；解锁前停笔自动恢复灰浮雕 underlay
+          if (variantRef.current === 'flow' && medalUnlockedRef.current) return
           decayRevealCanvas(textures.revealCanvas)
           medalRevealDirty = true
         } else if (currentPhase === 'wipe-background') {
@@ -579,6 +579,7 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
         if (!canPaint() || !isFlowHoverPaint() || isPointerDown) return
         if (!isInsideWrap(clientX, clientY)) {
           lastUvRef.current = null
+          lastPaintRef.current = 0
           return
         }
         paintAtClient(clientX, clientY)
@@ -627,6 +628,7 @@ export const MedalReliefCanvas = forwardRef<MedalReliefHandle, MedalReliefCanvas
       const onPointerLeave = () => {
         isPointerDown = false
         lastUvRef.current = null
+        lastPaintRef.current = 0
       }
 
       const onDocumentMove = (e: Event) => {
